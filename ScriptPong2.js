@@ -43,6 +43,10 @@
         //Sube la Barra en el eje y
         up: function(){
             this.y -= this.speed;
+        },
+        //sirve para mostrar las cordenadas transformando su valor a String
+        toString: function(){
+            return "x: "+ this.x+" y: "+this.y;
         }
     }
 
@@ -92,13 +96,27 @@
 
 })();
 
-window.addEventListener("load",main);
-
-function main (){
-    var board = new Board(800,400);
+var board = new Board(800,400);
     var canvas = document.getElementById('canvas');
     var board_view = new boardView(canvas,board);
     var bar= new Bar(40,150,30,100,board);
     var bar_2= new Bar(735,150,30,100,board);
+
+//control de inputs del teclado
+document.addEventListener("keydown",function(ev){
+    //capta la flecha arriba
+    if (ev.keyCode==38) {
+        bar.up();
+    }
+    //capta la flecha abajo
+    else if (ev.keyCode==40) {
+        bar.down();
+    }
+});
+
+window.addEventListener("load",main);
+
+function main (){
+    
     board_view.draw();
 }
