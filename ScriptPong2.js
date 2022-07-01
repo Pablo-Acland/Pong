@@ -106,7 +106,7 @@
         //Baja la Barra en el eje y
         down: function(){
             //Con 400 esteticamento queda fuera del margen pero funcionalmente es la unica forma de que agarre todo el espacio
-            if(this.y != 400){
+            if(this.y != 350){
                 this.y += this.speed;
             }
             
@@ -217,6 +217,7 @@
             this.board.score1=0;
             this.board.score2=0;
             ganador.innerHTML="¿Quien ganara?";
+            tuto.innerHTML="Precione espacio para iniciar el juego";
             board.playing = false;
         }
 
@@ -280,31 +281,35 @@ var board = new Board(800,400);
     var ganador = document.getElementById('ganador');
     var score_html_1 = document.getElementById('score1');
     var score_html_2 = document.getElementById('score2');
-    //score1.innerHTML= 3;
-    //score2.innerHTML= 3;
+    var tuto = document.getElementById('tutorial')
 
 //control de inputs del teclado
 document.addEventListener("keydown",function(ev){
+    ev.preventDefault();
     //capta la flecha arriba
     if (ev.keyCode==38) {
-        bar.up();
+        bar_2.up();
     }
     //capta la flecha abajo
     else if (ev.keyCode==40) {
-        bar.down();
+        bar_2.down();
     }
     //capta la w
     if (ev.keyCode==87) {
-        bar_2.up();
+        bar.up();
     }
     //capta la s
     else if (ev.keyCode==83) {
-        bar_2.down();
+        bar.down();
     }
     //capta el espacio y pausa el juego
     else if (ev.keyCode== 32) {
-        ev.preventDefault();
         board.playing = !board.playing;
+        if(board.playing== true){
+            tuto.innerHTML="Precione espacio para pausar";
+        }else{
+            tuto.innerHTML="Precione espacio para reanudar";
+        }
     }
 });
 
