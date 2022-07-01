@@ -1,0 +1,35 @@
+.contenedor {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(4, 130, 193);
+  }
+
+.text {
+    color: rgb(232, 140, 2);
+    text-align: center;
+    background-color: rgb(250, 255, 254);
+}
+.ganador{
+    color: rgb(232, 140, 2);
+    font-size:  50px;
+    text-align: center;
+    background-color: rgb(252, 252, 252);
+}
+.score1{
+    color: rgb(0, 0, 0);
+    margin-left: auto;
+    margin-right: auto;
+    font-size:  25px;
+    background-color: rgb(237, 162, 0);
+}
+.score2{
+    color: rgb(0, 0, 0);
+    margin-left: auto;
+    margin-right: auto;
+    font-size:  25px;
+    background-color: rgb(237, 162, 0);
+}
+
+.todo{
+    background-color: rgb(4, 130, 193);
+}

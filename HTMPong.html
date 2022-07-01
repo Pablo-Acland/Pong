@@ -6,10 +6,24 @@
     <style>
     canvas{ border:solid}
     </style>
+    <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <h1>Pingpong de Pablo</h1>
+    <div class="todo">
+    <h1 class="text">Pingpong de Pablo</h1>
+    <div class="contenedor">
+        <div class="score1">Score 1</div>
+        <div class="score1"> Score 2</div>
+    </div>
+    <div class="contenedor">
+        <div class="score2" id="score1">0</div>
+        <div class="score2" id="score2">0</div>
+    </div>
+    <div class="ganador" id="ganador">¿Quien ganara?</div>
+    <div class= "contenedor">
     <canvas id="canvas"></canvas>
+    </div>
     <script src="ScriptPong2.js"> </script>
+    </div>
 </body>
 </html>

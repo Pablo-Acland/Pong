@@ -7,6 +7,8 @@
         this.game_over = false;
         this.bars = [];
         this.ball = null;
+        this.score1=0;
+        this.score2=0;
     },
 
     //prototipo del pisarron
@@ -28,14 +30,15 @@
         this.y = y;
         this.radius = radius;
 
-        this.speed_y = 0;
+        this.speed_y = 1;
         this.speed_x=3;
         this.speed = 3;
         this.board = board;
 
         board.ball = this;
         this.kind = "circle";
-        this.direccion = 1
+        this.direccion_x = 1;
+        this.direccion_y = 1;
         this.bounce_angle = 0;
         this.max_bounce_angle= Math.PI / 12;
     }
@@ -45,27 +48,31 @@
 
         // muve la pelota de lugar
         muve: function(){
-            this.x += (this.speed_x * this.direccion);
-            this.y += (this.speed_y);
+            this.x += (this.speed_x * this.direccion_x);
+            this.y += (this.speed_y * this.direccion_y);
 
         },
         collision: function(bar){
 
                 //colisiona con una barra que resive como parametro
              var relative_intesect_y = (bar.y + (bar.height / 2)) - this.y;
-            
              var normalized_intersect_y= relative_intesect_y / (bar.height / 2);
 
              this.bounce_angle = normalized_intersect_y * this.max_bounce_angle;
 
 
-             this.speed_y = this.speed * Math.sin(this.bounce_angle);
-             this.speed_x= this.speed * Math.cos(this.bounce_angle);
+                var num1 = 735;
+                var num2 = 49;
+                
 
-             if (this.x > (this.board.width / 2)) {
-                 this.direccion = -1;
-             }else{
-                 this.direccion =1;
+             if (this.x >= num1) {
+                    
+                    this.speed_x= this.speed * Math.cos(this.bounce_angle);
+                    this.direccion_x = -1;
+             }else if(this.x <= num2){
+                    console.log(this.y);
+                    this.speed_x= this.speed * Math.cos(this.bounce_angle);
+                    this.direccion_x = 1;
              }
         },
         //se obtiene el ancho de la pelota
@@ -81,9 +88,11 @@
 
 (function(){
     //objeto Barra
-    self.Bar = function(x,y,width,height,board){
+    self.Bar = function(x,y,width,height,board,num){
         this.x = x;
         this.y = y;
+        this.point= 0;
+        this.num = num;
         this.width = width;
         this.height = height;
         this.board = board;
@@ -96,11 +105,19 @@
     self.Bar.prototype ={
         //Baja la Barra en el eje y
         down: function(){
-            this.y += this.speed;
+            //Con 400 esteticamento queda fuera del margen pero funcionalmente es la unica forma de que agarre todo el espacio
+            if(this.y != 400){
+                this.y += this.speed;
+            }
+            
+            console.log(this.y);
         },
         //Sube la Barra en el eje y
         up: function(){
-            this.y -= this.speed;
+            if(this.y!= 0){
+                this.y -= this.speed;
+            }
+            
         },
         //sirve para mostrar las cordenadas transformando su valor a String
         toString: function(){
@@ -145,6 +162,7 @@
             if(this.board.playing){
                 this.clean();
                 this.draw();
+                this.Win();
                 this.check_colisions();
                 this.board.ball.muve();
             }
@@ -155,11 +173,51 @@
         check_colisions: function(){
             for (let index = this.board.bars.length -1; index >=0 ; index--) {
                 var bar = this.board.bars[index];
+                var dir = this.board.ball.y;
+                console.log(bar.point);
+                if(this.board.ball.x >= 800 && bar.num==1){
+                    this.board.score1 += 1;
+                    this.board.ball.y = 200;
+                    this.board.ball.x = 400;
+                    this.board.ball.direccion_x = -1;
+                }
+                if(0 >=this.board.ball.x  && bar.num==2){
+                    this.board.score2 += 1;
+                    this.board.ball.y = 200;
+                    this.board.ball.x = 400;
+                    this.board.ball.direccion_x = 1;
+                }
+                    
+                if(dir >= 400){
+                    this.board.ball.direccion_y = -1;
+                }
+                if(0>=dir){
+                    this.board.ball.direccion_y = 1;
+                }
                 if (hit(bar,this.board.ball)) {
                     console.log("hola")
                     this.board.ball.collision(bar)
                 }
             }
+        },
+        Win: function(){
+            score_html_1.innerHTML= this.board.score1;
+            score_html_2.innerHTML= this.board.score2;
+            if(this.board.score1==5){ 
+                setTimeout(this.Reset(),6000);
+                ganador.innerHTML="Ganador jugador 1";
+                
+            }else if(this.board.score2==5){
+                setTimeout(this.Reset(),6000);
+                ganador.innerHTML="Ganador jugador 2";
+                
+            }
+        },
+        Reset: function(){
+            this.board.score1=0;
+            this.board.score2=0;
+            ganador.innerHTML="¿Quien ganara?";
+            board.playing = false;
         }
 
     }
@@ -216,9 +274,14 @@
 var board = new Board(800,400);
     var canvas = document.getElementById('canvas');
     var board_view = new boardView(canvas,board);
-    var bar= new Bar(40,150,30,100,board);
-    var bar_2= new Bar(735,150,30,100,board);
+    var bar= new Bar(40,150,30,100,board,1);
+    var bar_2= new Bar(736,150,30,100,board,2);
     var ball = new Ball(400,200,10,board);
+    var ganador = document.getElementById('ganador');
+    var score_html_1 = document.getElementById('score1');
+    var score_html_2 = document.getElementById('score2');
+    //score1.innerHTML= 3;
+    //score2.innerHTML= 3;
 
 //control de inputs del teclado
 document.addEventListener("keydown",function(ev){
