@@ -13,7 +13,7 @@
     self.Board.prototype = {
         get elements(){
             //paso bars con map para pasar los elementos uno por uno para hacer una copia y que no sature de basura
-            var elements = this.bars;
+            var elements = this.bars.map(function(bar){return bar;});
             elements.push(this.ball);
             return elements;
         }
@@ -35,8 +35,19 @@
 
         board.ball = this;
         this.kind = "circle";
-        
+        this.direccion = 1
 
+    }
+
+    //prototipo de la pelota
+    self.Ball.prototype ={
+
+        // muve la pelota de lugar
+        muve: function(){
+            this.x += (this.speed_x * this.direccion);
+            this.y += (this.speed_y);
+
+        }
     }
 })();
 
@@ -103,8 +114,12 @@
 
         //ejecuta los metodos relacionados con el juego
         play: function(){
-            this.clean();
+            if(this.board.playing){
+                this.clean();
             this.draw();
+            this.board.ball.muve();
+            }
+            
         }
 
     }
@@ -141,7 +156,6 @@ var board = new Board(800,400);
 
 //control de inputs del teclado
 document.addEventListener("keydown",function(ev){
-    ev.preventDefault();
     //capta la flecha arriba
     if (ev.keyCode==38) {
         bar.up();
@@ -158,9 +172,15 @@ document.addEventListener("keydown",function(ev){
     else if (ev.keyCode==83) {
         bar_2.down();
     }
+    //capta el espacio y pausa el juego
+    else if (ev.keyCode== 32) {
+        ev.preventDefault();
+        board.playing = !board.playing;
+    }
 });
 
 //window.addEventListener("load",main);
+board_view.draw();
 window.requestAnimationFrame(main);
 function main (){
     
